@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gato GraphQL - PHPUnit & Testing Utilities
 Description: Utilities for testing Gato GraphQL
-Version: 1.0.11
+Version: 1.0.12
 Requires at least: 5.4
 Requires PHP: 7.2
 Author: Gato GraphQL
@@ -40,13 +40,14 @@ add_action(
          */
         if (!PluginHelpers::enablePlugin()) {
             \add_action('admin_notices', function () {
-                _e(sprintf(
+                $adminNotice_safe = sprintf(
                     '<div class="notice notice-error"><p>%s</p></div>',
                     sprintf(
                         __('Functionality in plugin <strong>%s</strong> can only be enabled during development or testing.', 'gatographql-testing'),
                         __('Gato GraphQL - Testing', 'gatographql-testing')
                     )
-                ));
+                );
+                echo $adminNotice_safe;
             });
             return;
         }
