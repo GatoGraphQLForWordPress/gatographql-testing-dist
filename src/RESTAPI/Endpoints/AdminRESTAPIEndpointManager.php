@@ -20,7 +20,9 @@ class AdminRESTAPIEndpointManager extends AbstractRESTAPIEndpointManager
         return [
             new ModuleSettingsAdminRESTController(),
             new ModulesAdminRESTController(),
-            new CPTBlockAttributesAdminRESTController(Environment::getSupportedPluginNamespaces()),
+            new CPTBlockAttributesAdminRESTController(
+                Environment::getSupportedPluginNamespaces(),
+            ),
         ];
     }
 }

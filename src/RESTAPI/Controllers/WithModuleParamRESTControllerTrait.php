@@ -18,15 +18,14 @@ trait WithModuleParamRESTControllerTrait
             'description' => __('Module ID', 'gatographql-testing'),
             'type' => 'string',
             'required' => true,
-            'validate_callback' => \Closure::fromCallable([$this, 'validateModule']),
+            'validate_callback' => $this->validateModule(...),
         ];
     }
 
     /**
      * Validate there is a module with this ID
-     * @return bool|\WP_Error
      */
-    protected function validateModule(string $moduleID)
+    protected function validateModule(string $moduleID): bool|WP_Error
     {
         $module = $this->getModuleByID($moduleID);
         if ($module === null) {

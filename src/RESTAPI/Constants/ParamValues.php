@@ -6,6 +6,6 @@ namespace PHPUnitForGatoGraphQL\GatoGraphQLTesting\RESTAPI\Constants;
 
 class ParamValues
 {
-    public const ENABLED = 'enabled';
-    public const DISABLED = 'disabled';
+    final public const ENABLED = 'enabled';
+    final public const DISABLED = 'disabled';
 }

@@ -38,15 +38,12 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
     use WithModuleParamRESTControllerTrait;
     use WithFlushRewriteRulesRESTControllerTrait;
 
-    public const MODULE_STATES = [
+    final public const MODULE_STATES = [
         ParamValues::ENABLED,
         ParamValues::DISABLED,
     ];
 
-    /**
-     * @var string
-     */
-    protected $restBase = 'modules';
+    protected string $restBase = 'modules';
 
     /**
      * @return array<string,array<array<string,mixed>>> Array of [$route => [$options]]
@@ -57,7 +54,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
             $this->restBase => [
                 [
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => \Closure::fromCallable([$this, 'retrieveAllItems']),
+                    'callback' => $this->retrieveAllItems(...),
                     // Allow anyone to read the modules
                     'permission_callback' => '__return_true',
                 ],
@@ -65,7 +62,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
             $this->restBase . '/(?P<moduleID>[a-zA-Z_-]+)' => [
                 [
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => \Closure::fromCallable([$this, 'retrieveItem']),
+                    'callback' => $this->retrieveItem(...),
                     // Allow anyone to read the modules
                     'permission_callback' => '__return_true',
                     'args' => [
@@ -74,12 +71,12 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
                 ],
                 [
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => \Closure::fromCallable([$this, 'updateItem']),
+                    'callback' => $this->updateItem(...),
                     // only the Admin can execute the modification
-                    'permission_callback' => \Closure::fromCallable([$this, 'checkAdminPermission']),
+                    'permission_callback' => $this->checkAdminPermission(...),
                     'args' => [
                         Params::STATE => [
-                            'validate_callback' => \Closure::fromCallable([$this, 'validateState']),
+                            'validate_callback' => $this->validateState(...),
                         ],
                         Params::MODULE_ID => $this->getModuleIDParamArgs(),
                     ],
@@ -88,10 +85,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
         ];
     }
 
-    /**
-     * @return bool|\WP_Error
-     */
-    protected function validateState(string $value)
+    protected function validateState(string $value): bool|WP_Error
     {
         if (!in_array($value, self::MODULE_STATES)) {
             return new WP_Error(
@@ -108,10 +102,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
         return true;
     }
 
-    /**
-     * @return \WP_REST_Response|\WP_Error
-     */
-    public function retrieveAllItems(WP_REST_Request $request)
+    public function retrieveAllItems(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $items = [];
         $moduleRegistry = ModuleRegistryFacade::getInstance();
@@ -127,10 +118,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
         return rest_ensure_response($items);
     }
 
-    /**
-     * @return \WP_REST_Response|\WP_Error
-     */
-    protected function prepareItemForResponse(string $module)
+    protected function prepareItemForResponse(string $module): WP_REST_Response|WP_Error
     {
         $item = $this->prepareItem($module);
         $response = rest_ensure_response($item);
@@ -162,15 +150,11 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
             'description' => $moduleResolver->getDescription($module),
             'dependsOnModules' => $moduleResolver->getDependedModuleLists($module),
             'dependsOnActivePlugins' => array_map(
-                function (DependedOnActiveWordPressPlugin $dependedOnActiveWordPressPlugin) {
-                    return $dependedOnActiveWordPressPlugin->name;
-                },
+                fn (DependedOnActiveWordPressPlugin $dependedOnActiveWordPressPlugin) => $dependedOnActiveWordPressPlugin->name,
                 $moduleResolver->getDependentOnActiveWordPressPlugins($module)
             ),
             'dependsOnInactivePlugins' => array_map(
-                function (DependedOnInactiveWordPressPlugin $dependedOnInactiveWordPressPlugin) {
-                    return $dependedOnInactiveWordPressPlugin->name;
-                },
+                fn (DependedOnInactiveWordPressPlugin $dependedOnInactiveWordPressPlugin) => $dependedOnInactiveWordPressPlugin->name,
                 $moduleResolver->getDependentOnInactiveWordPressPlugins($module)
             ),
             // 'url' => $moduleResolver->getURL($module),
@@ -179,10 +163,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
         ];
     }
 
-    /**
-     * @return \WP_REST_Response|\WP_Error
-     */
-    public function retrieveItem(WP_REST_Request $request)
+    public function retrieveItem(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $params = $request->get_params();
         /** @var string */
@@ -213,7 +194,11 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
             ],
             'collection' => [
                 'href' => rest_url(
-                    sprintf('%s/%s', $this->getNamespace(), $this->restBase)
+                    sprintf(
+                        '%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                    )
                 ),
             ],
             'settings' => [
@@ -229,10 +214,7 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
         ];
     }
 
-    /**
-     * @return \WP_REST_Response|\WP_Error
-     */
-    public function updateItem(WP_REST_Request $request)
+    public function updateItem(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $response = new RESTResponse();
 

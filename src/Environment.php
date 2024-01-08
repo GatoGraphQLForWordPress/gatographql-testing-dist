@@ -6,9 +6,9 @@ namespace PHPUnitForGatoGraphQL\GatoGraphQLTesting;
 
 class Environment
 {
-    public const INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES = 'INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES';
-    public const CONTINUOUS_INTEGRATION_VALID_TESTING_DOMAINS = 'CONTINUOUS_INTEGRATION_VALID_TESTING_DOMAINS';
-    public const LOCAL_DEVELOPMENT_VALID_TESTING_DOMAINS = 'LOCAL_DEVELOPMENT_VALID_TESTING_DOMAINS';
+    public final const INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES = 'INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES';
+    public final const CONTINUOUS_INTEGRATION_VALID_TESTING_DOMAINS = 'CONTINUOUS_INTEGRATION_VALID_TESTING_DOMAINS';
+    public final const LOCAL_DEVELOPMENT_VALID_TESTING_DOMAINS = 'LOCAL_DEVELOPMENT_VALID_TESTING_DOMAINS';
 
     /**
      * Provide the plugin namespaces (eg: also for extensions) for which
@@ -21,7 +21,7 @@ class Environment
     {
         return getenv('INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES') !== false
             ? array_map(
-                \Closure::fromCallable('trim'),
+                trim(...),
                 explode(',', getenv('INTEGRATION_TESTS_SUPPORTED_PLUGIN_NAMESPACES'))
             )
             : ['GatoGraphQL'];
