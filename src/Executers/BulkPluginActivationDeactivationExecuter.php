@@ -33,7 +33,7 @@ class BulkPluginActivationDeactivationExecuter
     {
         \add_action(
             PluginAppHooks::INITIALIZE_APP,
-            $this->addHooks(...),
+            \Closure::fromCallable([$this, 'addHooks']),
             PluginLifecyclePriorities::INITIALIZE_APP
         );
     }
@@ -46,7 +46,7 @@ class BulkPluginActivationDeactivationExecuter
 
         App::addAction(
             HookNames::APPLICATION_READY,
-            $this->maybeExecute(...)
+            \Closure::fromCallable([$this, 'maybeExecute'])
         );
     }
 
@@ -68,12 +68,10 @@ class BulkPluginActivationDeactivationExecuter
 
         if ($executeBulkPluginDeactivation) {
             if (!App::getRequest()->query->has(Params::SKIP_DEACTIVATING_PLUGIN_FILES)) {
-                throw new RuntimeException(
-                    sprintf(
-                        \__('Must provide parameter "%s" when bulk deactivating plugins'),
-                        Params::SKIP_DEACTIVATING_PLUGIN_FILES
-                    ),
-                );
+                throw new RuntimeException(sprintf(
+                    \__('Must provide parameter "%s" when bulk deactivating plugins'),
+                    Params::SKIP_DEACTIVATING_PLUGIN_FILES
+                ));
             }
             /** @var string[] */
             $skipDeactivatingPlugins = App::getRequest()->query->all()[Params::SKIP_DEACTIVATING_PLUGIN_FILES];

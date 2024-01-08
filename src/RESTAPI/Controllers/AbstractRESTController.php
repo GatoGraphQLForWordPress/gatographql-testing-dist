@@ -32,11 +32,7 @@ abstract class AbstractRESTController extends WP_REST_Controller
 
     final protected function getNamespace(): string
     {
-        $namespace = sprintf(
-            '%s/%s',
-            $this->getPluginNamespace(),
-            $this->getVersion(),
-        );
+        $namespace = sprintf('%s/%s', $this->getPluginNamespace(), $this->getVersion());
         $controllerNamespace = $this->getControllerNamespace();
         if ($controllerNamespace !== '') {
             $namespace = sprintf(

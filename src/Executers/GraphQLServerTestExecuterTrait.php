@@ -22,7 +22,9 @@ trait GraphQLServerTestExecuterTrait
             /**
              * @param array<string,mixed> $error
              */
-            fn (string $message, array $error): string => $this->customizeWordPressErrorMessage($message, $error),
+            function (string $message, array $error) : string {
+                return $this->customizeWordPressErrorMessage($message, $error);
+            },
             10,
             2
         );
@@ -46,16 +48,18 @@ trait GraphQLServerTestExecuterTrait
     /**
      * Print the message under an artificial entry
      * in the JSON response, and exit
+     * @return never
      */
-    protected function outputArtificialErrorAsJSONResponse(string $errorMessage): never
+    protected function outputArtificialErrorAsJSONResponse(string $errorMessage)
     {
         $this->outputJSONResponseAndExit(['artificialError' => $errorMessage]);
     }
 
     /**
      * @param array<string,mixed> $json
+     * @return never
      */
-    protected function outputJSONResponseAndExit(array $json): never
+    protected function outputJSONResponseAndExit(array $json)
     {
         header(sprintf(
             '%s: %s',

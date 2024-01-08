@@ -9,16 +9,28 @@ use stdClass;
 
 class RESTResponse
 {
-    public function __construct(
-        public string $status = '',
-        public string $message = '',
+    /**
+     * @var string
+     */
+    public $status = '';
+    /**
+     * @var string
+     */
+    public $message = '';
+    /**
+     * @var \stdClass
+     */
+    public $data;
+    public function __construct(string $status = '', string $message = '', stdClass $data = null)
+    {
+        $data = $data ?? new stdClass();
+        $this->status = $status;
+        $this->message = $message;
         /**
          * Extra data
          */
-        public stdClass $data = new stdClass(),
-    ) {
+        $this->data = $data;
     }
-
     public static function fromClientResponse(ResponseInterface $clientResponse): self
     {
         $clientResponseContents = json_decode($clientResponse->getBody()->__toString());

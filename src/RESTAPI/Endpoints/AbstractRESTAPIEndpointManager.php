@@ -21,7 +21,7 @@ abstract class AbstractRESTAPIEndpointManager
             return;
         }
 
-        add_action('rest_api_init', $this->registerRoutes(...));
+        add_action('rest_api_init', \Closure::fromCallable([$this, 'registerRoutes']));
     }
 
     public function registerRoutes(): void

@@ -16,7 +16,7 @@ class CustomHeaderAppender
     {
         add_action(
             'init',
-            $this->addRESTNonceAsHeader(...)
+            \Closure::fromCallable([$this, 'addRESTNonceAsHeader'])
         );
     }
 

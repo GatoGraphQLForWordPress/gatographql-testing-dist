@@ -49,12 +49,12 @@ class Plugin
          */
         if (get_option(Options::FLUSH_REWRITE_RULES)) {
             delete_option(Options::FLUSH_REWRITE_RULES);
-            add_action('init', flush_rewrite_rules(...), PHP_INT_MAX);
+            add_action('init', \Closure::fromCallable('flush_rewrite_rules'), PHP_INT_MAX);
         }
 
         $this->maybeAdaptRESTAPIResponse();
 
-        add_action('init', $this->registerTestingTaxonomies(...));
+        add_action('init', \Closure::fromCallable([$this, 'registerTestingTaxonomies']));
     }
 
     /**
@@ -99,35 +99,16 @@ class Plugin
          * @see wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php
          */
         $cpts = ['post', 'page', 'attachment'];
-        $hooks = [
-            'rest_prepare_application_password',
-            'rest_prepare_attachment',
-            'rest_prepare_autosave',
-            'rest_prepare_block_type',
-            'rest_prepare_comment',
-            'rest_prepare_nav_menu_item',
-            'rest_prepare_menu_location',
-            'rest_prepare_block_pattern',
-            'rest_prepare_plugin',
-            'rest_prepare_status',
-            'rest_prepare_post_type',
-            'rest_prepare_revision',
-            'rest_prepare_sidebar',
-            'rest_prepare_taxonomy',
-            'rest_prepare_theme',
-            'rest_prepare_url_details',
-            'rest_prepare_user',
-            'rest_prepare_widget_type',
-            'rest_prepare_widget',
-            ...array_map(
-                fn (string $cpt) => 'rest_prepare_' . $cpt,
-                $cpts
-            )
-        ];
+        $hooks = array_merge(['rest_prepare_application_password', 'rest_prepare_attachment', 'rest_prepare_autosave', 'rest_prepare_block_type', 'rest_prepare_comment', 'rest_prepare_nav_menu_item', 'rest_prepare_menu_location', 'rest_prepare_block_pattern', 'rest_prepare_plugin', 'rest_prepare_status', 'rest_prepare_post_type', 'rest_prepare_revision', 'rest_prepare_sidebar', 'rest_prepare_taxonomy', 'rest_prepare_theme', 'rest_prepare_url_details', 'rest_prepare_user', 'rest_prepare_widget_type', 'rest_prepare_widget'], array_map(
+            function (string $cpt) {
+                return 'rest_prepare_' . $cpt;
+            },
+            $cpts
+        ));
         foreach ($hooks as $hook) {
             \add_filter(
                 $hook,
-                $this->removeRESTAPIResponseLink(...),
+                \Closure::fromCallable([$this, 'removeRESTAPIResponseLink']),
                 PHP_INT_MAX
             );
         }
@@ -149,38 +130,21 @@ class Plugin
         \register_taxonomy(
             'dummy-tag',
             [],
-            $this->getTaxonomyArgs(
-                false,
-                __('Dummy Tag'),
-                __('Dummy Tags'),
-                __('dummy tag'),
-                __('dummy tags'),
-            )
+            $this->getTaxonomyArgs(false, __('Dummy Tag'), __('Dummy Tags'), __('dummy tag'), __('dummy tags'))
         );
 
         \register_taxonomy(
             'dummy-category',
             [],
-            $this->getTaxonomyArgs(
-                true,
-                __('Dummy Category'),
-                __('Dummy Categories'),
-                __('dummy category'),
-                __('dummy categories'),
-            )
+            $this->getTaxonomyArgs(true, __('Dummy Category'), __('Dummy Categories'), __('dummy category'), __('dummy categories'))
         );
 
         \register_post_type(
             'dummy-cpt',
-            $this->getCustomPostTypeArgs(
-                [
-                    'dummy-tag',
-                    'dummy-category',
-                ],
-                __('Dummy CPT'),
-                __('Dummy CPTs'),
-                __('dummy CPTs'),
-            )
+            $this->getCustomPostTypeArgs([
+                'dummy-tag',
+                'dummy-category',
+            ], __('Dummy CPT'), __('Dummy CPTs'), __('dummy CPTs'))
         );
     }
 
@@ -193,21 +157,11 @@ class Plugin
      * @param string $names_lc Plural name lowercase
      * @return array<string,mixed>
      */
-    protected function getTaxonomyArgs(
-        bool $hierarchical,
-        string $name_uc,
-        string $names_uc,
-        string $name_lc,
-        string $names_lc,
-    ): array {
+    protected function getTaxonomyArgs(bool $hierarchical, string $name_uc, string $names_uc, string $name_lc, string $names_lc): array
+    {
         return array(
             'label' => $names_uc,
-            'labels' => $this->getTaxonomyLabels(
-                $name_uc,
-                $names_uc,
-                $name_lc,
-                $names_lc,
-            ),
+            'labels' => $this->getTaxonomyLabels($name_uc, $names_uc, $name_lc, $names_lc),
             'hierarchical' => $hierarchical,
             'public' => true,
             'show_ui' => true,
@@ -226,12 +180,8 @@ class Plugin
      * @param string $names_lc Plural name lowercase
      * @return array<string,string>
      */
-    protected function getTaxonomyLabels(
-        string $name_uc,
-        string $names_uc,
-        string $name_lc,
-        string $names_lc,
-    ): array {
+    protected function getTaxonomyLabels(string $name_uc, string $names_uc, string $name_lc, string $names_lc): array
+    {
         return array(
             'name'                           => $names_uc,
             'singular_name'                  => $name_uc,
@@ -257,12 +207,8 @@ class Plugin
      * @param string[] $taxonomies
      * @return array<string,mixed>
      */
-    protected function getCustomPostTypeArgs(
-        array $taxonomies,
-        string $name_uc,
-        string $names_uc,
-        string $names_lc,
-    ): array {
+    protected function getCustomPostTypeArgs(array $taxonomies, string $name_uc, string $names_uc, string $names_lc): array
+    {
         return array(
             'public' => true,
             'show_in_nav_menus' => true,
@@ -299,11 +245,8 @@ class Plugin
      * @param string $names_lc Plural name lowercase
      * @return array<string,string>
      */
-    protected function getCustomPostTypeLabels(
-        string $name_uc,
-        string $names_uc,
-        string $names_lc,
-    ): array {
+    protected function getCustomPostTypeLabels(string $name_uc, string $names_uc, string $names_lc): array
+    {
         return array(
             'name'               => $names_uc,
             'singular_name'      => $name_uc,

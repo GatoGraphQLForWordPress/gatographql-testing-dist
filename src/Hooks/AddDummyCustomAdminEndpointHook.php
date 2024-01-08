@@ -27,9 +27,8 @@ class AddDummyCustomAdminEndpointHook extends AbstractAddCustomAdminEndpointHook
      * @param array<class-string<ModuleInterface>,array<string,mixed>> $moduleClassConfiguration [key]: Module class, [value]: Configuration
      * @return array<class-string<ModuleInterface>,array<string,mixed>> [key]: Module class, [value]: Configuration
      */
-    protected function doGetPredefinedAdminEndpointModuleClassConfiguration(
-        array $moduleClassConfiguration,
-    ): array {
+    protected function doGetPredefinedAdminEndpointModuleClassConfiguration(array $moduleClassConfiguration): array
+    {
         $moduleClassConfiguration[CustomPostsModule::class][CustomPostsEnvironment::QUERYABLE_CUSTOMPOST_TYPES] = ['revision'];
         return $moduleClassConfiguration;
     }
@@ -40,9 +39,8 @@ class AddDummyCustomAdminEndpointHook extends AbstractAddCustomAdminEndpointHook
      * @param array<class-string<ModuleInterface>> $schemaModuleClassesToSkip List of `Module` class which must not initialize their Schema services
      * @return array<class-string<ModuleInterface>> List of `Module` class which must not initialize their Schema services
      */
-    protected function doGetSchemaModuleClassesToSkip(
-        array $schemaModuleClassesToSkip,
-    ): array {
+    protected function doGetSchemaModuleClassesToSkip(array $schemaModuleClassesToSkip): array
+    {
         return [];
     }
 }

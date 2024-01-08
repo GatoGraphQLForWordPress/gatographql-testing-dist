@@ -45,20 +45,27 @@ use function serialize_blocks;
  */
 class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
 {
+    /**
+     * @var string[]
+     */
+    protected $pluginNamespaces;
     protected const BLOCK_ID_SEPARATOR = ':';
 
-    protected string $restBase = 'cpt-block-attributes';
+    /**
+     * @var string
+     */
+    protected $restBase = 'cpt-block-attributes';
     /** @var string[]|null */
-    protected ?array $supportedCustomPostTypes = null;
+    protected $supportedCustomPostTypes;
     /** @var array<string,int> Count block position, to generate the blockID */
-    protected array $blockNameCounter = [];
+    protected $blockNameCounter = [];
 
     /**
      * @param string[] $pluginNamespaces
      */
-    public function __construct(
-        protected array $pluginNamespaces,
-    ) {
+    public function __construct(array $pluginNamespaces)
+    {
+        $this->pluginNamespaces = $pluginNamespaces;
     }
 
     /**
@@ -70,7 +77,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             $this->restBase . '/(?P<customPostID>[\d]+)' => [
                 [
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => $this->retrieveAllItems(...),
+                    'callback' => \Closure::fromCallable([$this, 'retrieveAllItems']),
                     // Allow anyone to read the modules
                     'permission_callback' => '__return_true',
                     'args' => [
@@ -81,7 +88,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             $this->restBase . '/(?P<customPostID>[\d]+)/(?P<blockNamespace>[a-zA-Z_-]+)/(?P<blockID>[a-zA-Z_-]+)' => [
                 [
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => $this->retrieveItem(...),
+                    'callback' => \Closure::fromCallable([$this, 'retrieveItem']),
                     // Allow anyone to read the modules
                     'permission_callback' => '__return_true',
                     'args' => [
@@ -92,9 +99,9 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
                 ],
                 [
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => $this->updateItem(...),
+                    'callback' => \Closure::fromCallable([$this, 'updateItem']),
                     // only the Admin can execute the modification
-                    'permission_callback' => $this->checkAdminPermission(...),
+                    'permission_callback' => \Closure::fromCallable([$this, 'checkAdminPermission']),
                     'args' => [
                         Params::CUSTOM_POST_ID => $this->getCustomPostIDParamArgs(),
                         Params::BLOCK_NAMESPACE => $this->getBlockNamespaceParamArgs(),
@@ -119,7 +126,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             'description' => __('Custom Post ID', 'gatographql-testing'),
             'type' => 'integer',
             'required' => true,
-            'validate_callback' => $this->validateCustomPost(...),
+            'validate_callback' => \Closure::fromCallable([$this, 'validateCustomPost']),
         ];
     }
 
@@ -149,8 +156,9 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
 
     /**
      * Validate there is a custom post with this ID
+     * @return bool|\WP_Error
      */
-    protected function validateCustomPost(string $customPostID): bool|WP_Error
+    protected function validateCustomPost(string $customPostID)
     {
         $post = $this->getCustomPost((int)$customPostID);
         if (is_wp_error($post)) {
@@ -162,7 +170,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
     /**
      * @return WP_Post|WP_Error Custom post object if ID is valid, WP_Error otherwise.
      */
-    protected function getCustomPost(int $customPostID): WP_Post|WP_Error
+    protected function getCustomPost(int $customPostID)
     {
         if ($customPostID <= 0) {
             return new WP_Error(
@@ -240,22 +248,25 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         // Use $serviceDefinitionID for if the class is overriden
         $customPostTypes = array_values(array_filter(
             $customPostTypeRegistry->getCustomPostTypes(),
-            fn (string $serviceDefinitionID) => [] !== array_filter(
-                $this->pluginNamespaces,
-                fn (string $pluginNamespace) => str_starts_with(
-                    $serviceDefinitionID,
-                    $pluginNamespace . '\\'
-                ),
-            ),
+            function (string $serviceDefinitionID) {
+                return [] !== array_filter($this->pluginNamespaces, function (string $pluginNamespace) use ($serviceDefinitionID) {
+                    return strncmp($serviceDefinitionID, $pluginNamespace . '\\', strlen($pluginNamespace . '\\')) === 0;
+                });
+            },
             ARRAY_FILTER_USE_KEY
         ));
         return array_map(
-            fn (CustomPostTypeInterface $customPostType) => $customPostType->getCustomPostType(),
+            function (CustomPostTypeInterface $customPostType) {
+                return $customPostType->getCustomPostType();
+            },
             $customPostTypes
         );
     }
 
-    public function retrieveAllItems(WP_REST_Request $request): WP_REST_Response|WP_Error
+    /**
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function retrieveAllItems(WP_REST_Request $request)
     {
         $params = $request->get_params();
         $customPostID = (int)$params[Params::CUSTOM_POST_ID];
@@ -290,8 +301,9 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
 
     /**
      * @param array<string,mixed> $block
+     * @return \WP_REST_Response|\WP_Error
      */
-    protected function prepareItemForResponse(int $customPostID, array $block): WP_REST_Response|WP_Error
+    protected function prepareItemForResponse(int $customPostID, array $block)
     {
         $item = $this->prepareItem($block);
         $response = rest_ensure_response($item);
@@ -314,7 +326,10 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         ];
     }
 
-    public function retrieveItem(WP_REST_Request $request): WP_REST_Response|WP_Error
+    /**
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function retrieveItem(WP_REST_Request $request)
     {
         $params = $request->get_params();
         $customPostID = (int)$params[Params::CUSTOM_POST_ID];
@@ -327,20 +342,13 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         $blocks = \parse_blocks($customPost->post_content);
         $block = $this->getBlock($blockNamespace, $blockID, $blocks);
         if ($block === null) {
-            return $this->getNonExistingBlockError(
-                $customPostID,
-                $blockNamespace,
-                $blockID,
-            );
+            return $this->getNonExistingBlockError($customPostID, $blockNamespace, $blockID);
         }
         return $this->prepareItemForResponse($customPostID, $block);
     }
 
-    public function getNonExistingBlockError(
-        int $customPostID,
-        string $blockNamespace,
-        string $blockID,
-    ): WP_Error {
+    public function getNonExistingBlockError(int $customPostID, string $blockNamespace, string $blockID): WP_Error
+    {
         $errorData = [
             Params::STATE => [
                 Params::CUSTOM_POST_ID => $customPostID,
@@ -419,23 +427,12 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         return [
             'self' => [
                 'href' => rest_url(
-                    sprintf(
-                        '%s/%s/%s/%s',
-                        $this->getNamespace(),
-                        $this->restBase,
-                        $customPostID,
-                        $this->getBlockID($blockNamespacedName, $blockPosition),
-                    )
+                    sprintf('%s/%s/%s/%s', $this->getNamespace(), $this->restBase, $customPostID, $this->getBlockID($blockNamespacedName, $blockPosition))
                 ),
             ],
             'collection' => [
                 'href' => rest_url(
-                    sprintf(
-                        '%s/%s/%s',
-                        $this->getNamespace(),
-                        $this->restBase,
-                        $customPostID,
-                    )
+                    sprintf('%s/%s/%s', $this->getNamespace(), $this->restBase, $customPostID)
                 ),
             ],
         ];
@@ -449,7 +446,10 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         return $blockNamespacedName . self::BLOCK_ID_SEPARATOR . $blockPosition;
     }
 
-    public function updateItem(WP_REST_Request $request): WP_REST_Response|WP_Error
+    /**
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function updateItem(WP_REST_Request $request)
     {
         $response = new RESTResponse();
 
@@ -466,10 +466,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             if ($blockAttributeValues === null) {
                 return new WP_Error(
                     '1',
-                    sprintf(
-                        __('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'),
-                        Params::JSON_ENCODED_BLOCK_ATTRIBUTE_VALUES,
-                    ),
+                    sprintf(__('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'), Params::JSON_ENCODED_BLOCK_ATTRIBUTE_VALUES),
                     [
                         Params::STATE => [
                             Params::CUSTOM_POST_ID => $customPostID,
@@ -504,11 +501,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
                 break;
             }
             if (!$found) {
-                return $this->getNonExistingBlockError(
-                    $customPostID,
-                    $blockNamespace,
-                    $blockID,
-                );
+                return $this->getNonExistingBlockError($customPostID, $blockNamespace, $blockID);
             }
 
             /**
@@ -531,10 +524,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             // Success!
             $response->status = ResponseStatus::SUCCESS;
             $response->message = $blockPosition === 0
-                ? sprintf(
-                    __('Attributes for block \'%s\' have been updated successfully', 'gatographql-testing'),
-                    $blockNamespacedName,
-                )
+                ? sprintf(__('Attributes for block \'%s\' have been updated successfully', 'gatographql-testing'), $blockNamespacedName)
                 : sprintf(
                     __('Attributes for block \'%s\' on position \'%s\' have been updated successfully', 'gatographql-testing'),
                     $blockNamespacedName,

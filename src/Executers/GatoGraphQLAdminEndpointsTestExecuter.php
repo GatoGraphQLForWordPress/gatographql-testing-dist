@@ -25,7 +25,7 @@ class GatoGraphQLAdminEndpointsTestExecuter
 
         \add_action(
             'init',
-            $this->testGatoGraphQLAdminEndpoints(...)
+            \Closure::fromCallable([$this, 'testGatoGraphQLAdminEndpoints'])
         );
     }
 
