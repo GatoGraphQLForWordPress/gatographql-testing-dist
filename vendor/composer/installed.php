@@ -3,7 +3,7 @@
         'name' => 'phpunit-for-gatographql/gatographql-testing',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => NULL,
+        'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'phpunit-for-gatographql/gatographql-testing' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => NULL,
+            'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
