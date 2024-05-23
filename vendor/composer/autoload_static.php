@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90
+class ComposerStaticInitcd0a9e84faf96b5fccdc760e0e5cb8ef
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -25,6 +25,7 @@ class ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\Actions' => __DIR__ . '/../..' . '/src/Constants/Actions.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\CustomHeaders' => __DIR__ . '/../..' . '/src/Constants/CustomHeaders.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\Params' => __DIR__ . '/../..' . '/src/Constants/Params.php',
+        'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\UserMetaKeys' => __DIR__ . '/../..' . '/src/Constants/UserMetaKeys.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Environment' => __DIR__ . '/../..' . '/src/Environment.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Executers\\BulkPluginActivationDeactivationExecuter' => __DIR__ . '/../..' . '/src/Executers/BulkPluginActivationDeactivationExecuter.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Executers\\GatoGraphQLAdminEndpointsTestExecuter' => __DIR__ . '/../..' . '/src/Executers/GatoGraphQLAdminEndpointsTestExecuter.php',
@@ -54,9 +55,9 @@ class ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit5288388d16d5fca19d7ff59f4b17ab90::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcd0a9e84faf96b5fccdc760e0e5cb8ef::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcd0a9e84faf96b5fccdc760e0e5cb8ef::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitcd0a9e84faf96b5fccdc760e0e5cb8ef::$classMap;
 
         }, null, ClassLoader::class);
     }

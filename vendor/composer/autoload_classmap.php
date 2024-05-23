@@ -10,6 +10,7 @@ return array(
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\Actions' => $baseDir . '/src/Constants/Actions.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\CustomHeaders' => $baseDir . '/src/Constants/CustomHeaders.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\Params' => $baseDir . '/src/Constants/Params.php',
+    'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Constants\\UserMetaKeys' => $baseDir . '/src/Constants/UserMetaKeys.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Environment' => $baseDir . '/src/Environment.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Executers\\BulkPluginActivationDeactivationExecuter' => $baseDir . '/src/Executers/BulkPluginActivationDeactivationExecuter.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Executers\\GatoGraphQLAdminEndpointsTestExecuter' => $baseDir . '/src/Executers/GatoGraphQLAdminEndpointsTestExecuter.php',
