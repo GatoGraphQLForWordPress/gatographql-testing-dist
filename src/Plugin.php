@@ -136,9 +136,21 @@ class Plugin
         );
 
         \register_taxonomy(
+            'dummy-tag-two',
+            [],
+            $this->getTaxonomyArgs(false, __('Dummy Tag (Two)'), __('Dummy Tags (Two)'), __('dummy tag (two)'), __('dummy tags (two)'))
+        );
+
+        \register_taxonomy(
             'dummy-category',
             [],
             $this->getTaxonomyArgs(true, __('Dummy Category'), __('Dummy Categories'), __('dummy category'), __('dummy categories'))
+        );
+
+        \register_taxonomy(
+            'dummy-category-two',
+            [],
+            $this->getTaxonomyArgs(true, __('Dummy Category (Two)'), __('Dummy Categories (Two)'), __('dummy category (two)'), __('dummy categories (two)'))
         );
 
         \register_post_type(
@@ -147,6 +159,14 @@ class Plugin
                 'dummy-tag',
                 'dummy-category',
             ], __('Dummy CPT'), __('Dummy CPTs'), __('dummy CPTs'))
+        );
+
+        \register_post_type(
+            'dummy-cpt-two',
+            $this->getCustomPostTypeArgs([
+                'dummy-tag-two',
+                'dummy-category-two',
+            ], __('Dummy CPT (Two)'), __('Dummy CPTs (Two)'), __('dummy CPTs (two)'))
         );
     }
 

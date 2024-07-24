@@ -245,7 +245,7 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
     {
         $customPostTypeRegistry = CustomPostTypeRegistryFacade::getInstance();
         // Filter the ones that belong to any of the provided plugins
-        // Use $serviceDefinitionID for if the class is overriden
+        // Use $serviceDefinitionID for if the class is overridden
         $customPostTypes = array_values(array_filter(
             $customPostTypeRegistry->getCustomPostTypes(),
             function (string $serviceDefinitionID) {
