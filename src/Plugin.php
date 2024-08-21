@@ -175,13 +175,23 @@ class Plugin
      */
     protected function registerRESTFields(): void
     {
-        \register_rest_field(
-            'user',
+        $metaKeys = [
             UserMetaKeys::APP_PASSWORD,
-            [
-                'get_callback' => \Closure::fromCallable([$this, 'userMetaCallback']),
-            ]
-        );
+            UserMetaKeys::APP_PASSWORD_ADMIN,
+            UserMetaKeys::APP_PASSWORD_EDITOR,
+            UserMetaKeys::APP_PASSWORD_AUTHOR,
+            UserMetaKeys::APP_PASSWORD_CONTRIBUTOR,
+            UserMetaKeys::APP_PASSWORD_SUBSCRIBER,
+        ];
+        foreach ($metaKeys as $metaKey) {
+            \register_rest_field(
+                'user',
+                $metaKey,
+                [
+                    'get_callback' => \Closure::fromCallable([$this, 'userMetaCallback']),
+                ]
+            );
+        }
     }
 
     /**
