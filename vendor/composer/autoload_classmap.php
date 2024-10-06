@@ -35,4 +35,5 @@ return array(
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\RESTAPI\\Response\\ResponseKeys' => $baseDir . '/src/RESTAPI/Response/ResponseKeys.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Settings\\Options' => $baseDir . '/src/Settings/Options.php',
     'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Utilities\\CustomHeaderAppender' => $baseDir . '/src/Utilities/CustomHeaderAppender.php',
+    'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Webserver\\LandoAdapter' => $baseDir . '/src/Webserver/LandoAdapter.php',
 );

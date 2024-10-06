@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4bf44db0e37d874ed78302a7f6979c2f
+class ComposerStaticInit727be4da192e61601e1b168debf606b4
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -50,14 +50,15 @@ class ComposerStaticInit4bf44db0e37d874ed78302a7f6979c2f
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\RESTAPI\\Response\\ResponseKeys' => __DIR__ . '/../..' . '/src/RESTAPI/Response/ResponseKeys.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Settings\\Options' => __DIR__ . '/../..' . '/src/Settings/Options.php',
         'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Utilities\\CustomHeaderAppender' => __DIR__ . '/../..' . '/src/Utilities/CustomHeaderAppender.php',
+        'PHPUnitForGatoGraphQL\\GatoGraphQLTesting\\Webserver\\LandoAdapter' => __DIR__ . '/../..' . '/src/Webserver/LandoAdapter.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4bf44db0e37d874ed78302a7f6979c2f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4bf44db0e37d874ed78302a7f6979c2f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4bf44db0e37d874ed78302a7f6979c2f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit727be4da192e61601e1b168debf606b4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit727be4da192e61601e1b168debf606b4::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit727be4da192e61601e1b168debf606b4::$classMap;
 
         }, null, ClassLoader::class);
     }
