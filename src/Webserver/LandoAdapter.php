@@ -31,8 +31,14 @@ class LandoAdapter
                     return;
                 }
 
-                App::addAction(EngineHookNames::GENERATE_DATA_BEGINNING, \Closure::fromCallable([$this, 'addHooks']));
-                App::addAction(EngineHookNames::GENERATE_DATA_END, \Closure::fromCallable([$this, 'removeHooks']));
+                App::addAction(
+                    EngineHookNames::GENERATE_DATA_BEGINNING,
+                    \Closure::fromCallable([$this, 'addHooks']),
+                );
+                App::addAction(
+                    EngineHookNames::GENERATE_DATA_END,
+                    \Closure::fromCallable([$this, 'removeHooks']),
+                );
             }
         );
     }

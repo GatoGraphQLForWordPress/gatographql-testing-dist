@@ -249,9 +249,12 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         $customPostTypes = array_values(array_filter(
             $customPostTypeRegistry->getCustomPostTypes(),
             function (string $serviceDefinitionID) {
-                return [] !== array_filter($this->pluginNamespaces, function (string $pluginNamespace) use ($serviceDefinitionID) {
-                    return strncmp($serviceDefinitionID, $pluginNamespace . '\\', strlen($pluginNamespace . '\\')) === 0;
-                });
+                return [] !== array_filter(
+                    $this->pluginNamespaces,
+                    function (string $pluginNamespace) use ($serviceDefinitionID) {
+                        return strncmp($serviceDefinitionID, $pluginNamespace . '\\', strlen($pluginNamespace . '\\')) === 0;
+                    },
+                );
             },
             ARRAY_FILTER_USE_KEY
         ));
@@ -342,7 +345,11 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         $blocks = \parse_blocks($customPost->post_content);
         $block = $this->getBlock($blockNamespace, $blockID, $blocks);
         if ($block === null) {
-            return $this->getNonExistingBlockError($customPostID, $blockNamespace, $blockID);
+            return $this->getNonExistingBlockError(
+                $customPostID,
+                $blockNamespace,
+                $blockID,
+            );
         }
         return $this->prepareItemForResponse($customPostID, $block);
     }
@@ -427,12 +434,23 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
         return [
             'self' => [
                 'href' => rest_url(
-                    sprintf('%s/%s/%s/%s', $this->getNamespace(), $this->restBase, $customPostID, $this->getBlockID($blockNamespacedName, $blockPosition))
+                    sprintf(
+                        '%s/%s/%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                        $customPostID,
+                        $this->getBlockID($blockNamespacedName, $blockPosition),
+                    )
                 ),
             ],
             'collection' => [
                 'href' => rest_url(
-                    sprintf('%s/%s/%s', $this->getNamespace(), $this->restBase, $customPostID)
+                    sprintf(
+                        '%s/%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                        $customPostID,
+                    )
                 ),
             ],
         ];
@@ -466,7 +484,10 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             if ($blockAttributeValues === null) {
                 return new WP_Error(
                     '1',
-                    sprintf(__('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'), Params::JSON_ENCODED_BLOCK_ATTRIBUTE_VALUES),
+                    sprintf(
+                        __('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'),
+                        Params::JSON_ENCODED_BLOCK_ATTRIBUTE_VALUES,
+                    ),
                     [
                         Params::STATE => [
                             Params::CUSTOM_POST_ID => $customPostID,
@@ -501,7 +522,11 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
                 break;
             }
             if (!$found) {
-                return $this->getNonExistingBlockError($customPostID, $blockNamespace, $blockID);
+                return $this->getNonExistingBlockError(
+                    $customPostID,
+                    $blockNamespace,
+                    $blockID,
+                );
             }
 
             /**
@@ -524,7 +549,10 @@ class CPTBlockAttributesAdminRESTController extends AbstractAdminRESTController
             // Success!
             $response->status = ResponseStatus::SUCCESS;
             $response->message = $blockPosition === 0
-                ? sprintf(__('Attributes for block \'%s\' have been updated successfully', 'gatographql-testing'), $blockNamespacedName)
+                ? sprintf(
+                    __('Attributes for block \'%s\' have been updated successfully', 'gatographql-testing'),
+                    $blockNamespacedName,
+                )
                 : sprintf(
                     __('Attributes for block \'%s\' on position \'%s\' have been updated successfully', 'gatographql-testing'),
                     $blockNamespacedName,

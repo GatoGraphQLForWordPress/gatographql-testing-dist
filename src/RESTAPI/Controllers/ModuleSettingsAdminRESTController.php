@@ -123,7 +123,10 @@ class ModuleSettingsAdminRESTController extends AbstractAdminRESTController
         if ($optionValues === null) {
             return new WP_Error(
                 '1',
-                sprintf(__('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'), Params::JSON_ENCODED_OPTION_VALUES),
+                sprintf(
+                    __('Property \'%s\' is not JSON-encoded properly', 'gatographql-testing'),
+                    Params::JSON_ENCODED_OPTION_VALUES,
+                ),
                 [
                     Params::STATE => [
                         Params::MODULE_ID => $moduleID,
@@ -259,17 +262,31 @@ class ModuleSettingsAdminRESTController extends AbstractAdminRESTController
         return [
             'self' => [
                 'href' => rest_url(
-                    sprintf('%s/%s/%s', $this->getNamespace(), $this->restBase, $moduleID)
+                    sprintf(
+                        '%s/%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                        $moduleID,
+                    )
                 ),
             ],
             'collection' => [
                 'href' => rest_url(
-                    sprintf('%s/%s', $this->getNamespace(), $this->restBase)
+                    sprintf(
+                        '%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                    )
                 ),
             ],
             'module' => [
                 'href' => rest_url(
-                    sprintf('%s/%s/%s', $this->getNamespace(), 'modules', $moduleID)
+                    sprintf(
+                        '%s/%s/%s',
+                        $this->getNamespace(),
+                        'modules',
+                        $moduleID,
+                    )
                 ),
             ],
         ];

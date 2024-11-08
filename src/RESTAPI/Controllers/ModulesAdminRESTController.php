@@ -213,7 +213,11 @@ class ModulesAdminRESTController extends AbstractAdminRESTController
             ],
             'collection' => [
                 'href' => rest_url(
-                    sprintf('%s/%s', $this->getNamespace(), $this->restBase)
+                    sprintf(
+                        '%s/%s',
+                        $this->getNamespace(),
+                        $this->restBase,
+                    )
                 ),
             ],
             'settings' => [

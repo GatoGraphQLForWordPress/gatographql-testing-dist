@@ -18,7 +18,7 @@ class PluginHelpers
          * @var string|null
          * phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
          */
-        $httpHost = $_SERVER['HTTP_HOST'] ?? null;
+        $httpHost = $_SERVER['SERVER_NAME'] ?? null;
         if ($httpHost === null) {
             return false;
         }
@@ -37,6 +37,9 @@ class PluginHelpers
     protected static function getDomainFromHTTPHost(string $httpHost): string
     {
         $hostNames = array_reverse(explode('.', $httpHost));
+        if (count($hostNames) === 1) {
+            return $hostNames[0];
+        }
         return $hostNames[1] . '.' . $hostNames[0];
     }
 }

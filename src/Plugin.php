@@ -140,7 +140,13 @@ class Plugin
             [
                 'post',
             ],
-            $this->getTaxonomyArgs(false, __('Additional Post Tag'), __('Additional Post Tags'), __('additional post tag'), __('additional post tags'))
+            $this->getTaxonomyArgs(
+                false,
+                __('Additional Post Tag'),
+                __('Additional Post Tags'),
+                __('additional post tag'),
+                __('additional post tags'),
+            )
         );
 
         \register_taxonomy(
@@ -148,61 +154,113 @@ class Plugin
             [
                 'post',
             ],
-            $this->getTaxonomyArgs(true, __('Additional Post Category'), __('Additional Post Categories'), __('additional post category'), __('additional post categories'))
+            $this->getTaxonomyArgs(
+                true,
+                __('Additional Post Category'),
+                __('Additional Post Categories'),
+                __('additional post category'),
+                __('additional post categories'),
+            )
         );
 
         \register_taxonomy(
             'dummy-tag',
             [],
-            $this->getTaxonomyArgs(false, __('Dummy Tag'), __('Dummy Tags'), __('dummy tag'), __('dummy tags'))
+            $this->getTaxonomyArgs(
+                false,
+                __('Dummy Tag'),
+                __('Dummy Tags'),
+                __('dummy tag'),
+                __('dummy tags'),
+            )
         );
 
         \register_taxonomy(
             'additional-dummy-tag',
             [],
-            $this->getTaxonomyArgs(false, __('Additional dummy Tag'), __('Additional dummy Tags'), __('additional dummy tag'), __('additional dummy tags'))
+            $this->getTaxonomyArgs(
+                false,
+                __('Additional dummy Tag'),
+                __('Additional dummy Tags'),
+                __('additional dummy tag'),
+                __('additional dummy tags'),
+            )
         );
 
         \register_taxonomy(
             'dummy-tag-two',
             [],
-            $this->getTaxonomyArgs(false, __('Dummy Tag (Two)'), __('Dummy Tags (Two)'), __('dummy tag (two)'), __('dummy tags (two)'))
+            $this->getTaxonomyArgs(
+                false,
+                __('Dummy Tag (Two)'),
+                __('Dummy Tags (Two)'),
+                __('dummy tag (two)'),
+                __('dummy tags (two)'),
+            )
         );
 
         \register_taxonomy(
             'dummy-category',
             [],
-            $this->getTaxonomyArgs(true, __('Dummy Category'), __('Dummy Categories'), __('dummy category'), __('dummy categories'))
+            $this->getTaxonomyArgs(
+                true,
+                __('Dummy Category'),
+                __('Dummy Categories'),
+                __('dummy category'),
+                __('dummy categories'),
+            )
         );
 
         \register_taxonomy(
             'additional-dummy-category',
             [],
-            $this->getTaxonomyArgs(true, __('Additional dummy Category'), __('Additional dummy Categories'), __('additional dummy category'), __('additional dummy categories'))
+            $this->getTaxonomyArgs(
+                true,
+                __('Additional dummy Category'),
+                __('Additional dummy Categories'),
+                __('additional dummy category'),
+                __('additional dummy categories'),
+            )
         );
 
         \register_taxonomy(
             'dummy-category-two',
             [],
-            $this->getTaxonomyArgs(true, __('Dummy Category (Two)'), __('Dummy Categories (Two)'), __('dummy category (two)'), __('dummy categories (two)'))
+            $this->getTaxonomyArgs(
+                true,
+                __('Dummy Category (Two)'),
+                __('Dummy Categories (Two)'),
+                __('dummy category (two)'),
+                __('dummy categories (two)'),
+            )
         );
 
         \register_post_type(
             'dummy-cpt',
-            $this->getCustomPostTypeArgs([
-                'dummy-tag',
-                'dummy-category',
-                'additional-dummy-tag',
-                'additional-dummy-category',
-            ], __('Dummy CPT'), __('Dummy CPTs'), __('dummy CPTs'))
+            $this->getCustomPostTypeArgs(
+                [
+                    'dummy-tag',
+                    'dummy-category',
+                    'additional-dummy-tag',
+                    'additional-dummy-category',
+                ],
+                __('Dummy CPT'),
+                __('Dummy CPTs'),
+                __('dummy CPTs'),
+            )
         );
 
         \register_post_type(
             'dummy-cpt-two',
-            $this->getCustomPostTypeArgs([
-                'dummy-tag-two',
-                'dummy-category-two',
-            ], __('Dummy CPT (Two)'), __('Dummy CPTs (Two)'), __('dummy CPTs (two)'))
+            $this->getCustomPostTypeArgs(
+                [
+                    'dummy-tag-two',
+                    'dummy-category-two',
+                ],
+                __('Dummy CPT (Two)'),
+                __('Dummy CPTs (Two)'),
+                __('dummy CPTs (two)'),
+            )
         );
     }
 
@@ -252,7 +310,12 @@ class Plugin
     {
         return array(
             'label' => $names_uc,
-            'labels' => $this->getTaxonomyLabels($name_uc, $names_uc, $name_lc, $names_lc),
+            'labels' => $this->getTaxonomyLabels(
+                $name_uc,
+                $names_uc,
+                $name_lc,
+                $names_lc,
+            ),
             'hierarchical' => $hierarchical,
             'public' => true,
             'show_ui' => true,
